@@ -62,7 +62,6 @@ def display(solution):
          s += '\n'
     return s
 
-# sum of all ascii code of each char - (length of the solution * ascii code of min char)
 def checksum(solution):
    return sum([ord(i) for i in solution]) - ord('1')*81
 
