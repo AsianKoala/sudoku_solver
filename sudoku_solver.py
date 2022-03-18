@@ -1,8 +1,6 @@
-import sys; args = sys.argv[1:]
-puzzles = open(args[0], "r").read().splitlines()
 import time
+import sys
 
-      
 def solve(puzzle, neighbors):
    variables, puzzle = initialize_ds(puzzle, neighbors)  
    return recursive_backtracking(puzzle, variables, neighbors)
@@ -69,15 +67,25 @@ def checksum(solution):
    return sum([ord(i) for i in solution]) - ord('1')*81
 
 def main():
+   args = sys.argv[1:]
+   if len(args) == 0:puzzles = open("puzzles.txt", "r").read().splitlines()
+   else: puzzles = open(args[0], "r").read().split()
    csp_table = sudoku_csp() 
    neighbors = sudoku_neighbors(csp_table)
    start_time = time.time()
+   initial_time = start_time
    for line, puzzle in enumerate(puzzles):
       line, puzzle = line+1, puzzle.rstrip()
-      print ("{}: {}".format(line, puzzle)) 
       solution = solve(puzzle, neighbors)
-      if solution == None:print ("No solution found."); break
-      print ("{}{} {}".format(" "*(len(str(line))+2), solution, checksum(solution)))
-   print ("Duration:", (time.time() - start_time))
+
+      if solution == None: print('No solution found'); break 
+      if checksum(solution) != 324: print('Incorrect solution found'); break
+      
+      print('\n\npuzzle {}:\n{}'.format(line, display(puzzle)))
+      print('solution: \n{}'.format(display(solution)))
+      print('time taken: {}\n'.format(time.time() - start_time))
+      start_time = time.time() 
+
+   print ("\n\nDuration:", (time.time() - initial_time))
 
 if __name__ == '__main__': main()
